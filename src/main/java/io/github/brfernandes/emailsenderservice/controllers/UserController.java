@@ -22,12 +22,11 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<HttpResponse> createUser(@RequestBody User user) {
-        User newUser = userService.saveUser(user);
+    public ResponseEntity<HttpResponse> sendWelcomeEmail(@RequestBody User user) {
+        userService.sendWelcomeEmail(user);
         return ResponseEntity.created(URI.create("")).body(
                 HttpResponse.builder()
                         .timeStamp(LocalDateTime.now().toString())
-                        .data(Map.of("user", newUser))
                         .message("User created")
                         .status(CREATED)
                         .statusCode(CREATED.value())
