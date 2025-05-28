@@ -1,4 +1,4 @@
-package io.github.brfernandes.emailsenderservice.domains;
+package io.github.brfernandes.emailsenderservice.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;

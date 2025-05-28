@@ -1,7 +1,8 @@
 package io.github.brfernandes.emailsenderservice.controllers;
 
-import io.github.brfernandes.emailsenderservice.domains.HttpResponse;
-import io.github.brfernandes.emailsenderservice.domains.User;
+import io.github.brfernandes.emailsenderservice.models.HttpResponse;
+import io.github.brfernandes.emailsenderservice.models.Order;
+import io.github.brfernandes.emailsenderservice.models.User;
 import io.github.brfernandes.emailsenderservice.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,19 @@ public class UserController {
                 HttpResponse.builder()
                         .timeStamp(LocalDateTime.now().toString())
                         .message("User created")
+                        .status(CREATED)
+                        .statusCode(CREATED.value())
+                        .build()
+        );
+    }
+
+    @PostMapping("/new-order")
+    public ResponseEntity<HttpResponse> sendConfirmedOrder(@RequestBody Order order) {
+        userService.sendConfirmedOrder(order);
+        return ResponseEntity.created(URI.create("")).body(
+                HttpResponse.builder()
+                        .timeStamp(LocalDateTime.now().toString())
+                        .message("Order created")
                         .status(CREATED)
                         .statusCode(CREATED.value())
                         .build()

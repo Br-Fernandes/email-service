@@ -1,6 +1,6 @@
 package io.github.brfernandes.emailsenderservice.repositories;
 
-import io.github.brfernandes.emailsenderservice.domains.User;
+import io.github.brfernandes.emailsenderservice.models.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

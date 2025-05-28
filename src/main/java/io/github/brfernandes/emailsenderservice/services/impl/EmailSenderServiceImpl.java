@@ -1,6 +1,7 @@
 package io.github.brfernandes.emailsenderservice.services.impl;
 
 import io.github.brfernandes.emailsenderservice.services.EmailSenderService;
+import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,8 +20,10 @@ import static io.github.brfernandes.emailsenderservice.utils.EmailUtils.getVerif
 public class EmailSenderServiceImpl implements EmailSenderService {
 
     public static final String NEW_USER_ACCOUNT_VERIFICATION = "Verificação de Conta de Novo Usuário";
+    public static final String ORDER_CONFIRMED = "Pedido Confirmado!";
     public static final String UTF_8_ENCODING = "UTF-8";
-    public static final String EMAIL_TEMPLATE = "emailtemplate";
+    public static final String WELCOME_TEMPLATE = "WelcomeTemplate";
+    public static final String ORDER_TEMPLATE = "OrderTemplate";
     public static final String TEXT_HTML_ENCONDING = "text/html";
 
     @Value("${spring.mail.verify.host}")
@@ -42,19 +45,34 @@ public class EmailSenderServiceImpl implements EmailSenderService {
         try {
             Context context = new Context();
             context.setVariables(Map.of("name", name, "url", getVerificationUrl(host ,token)));
-            String text = templateEngine.process(EMAIL_TEMPLATE, context);
-            MimeMessage message = getMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF_8_ENCODING);
-            helper.setPriority(1);
-            helper.setSubject(NEW_USER_ACCOUNT_VERIFICATION);
-            helper.setFrom(fromEmail);
-            helper.setTo(to);
-            helper.setText(text, true);
-
-            emailSender.send(message);
+            createHtmlEmail(to, context, WELCOME_TEMPLATE, NEW_USER_ACCOUNT_VERIFICATION);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    @Override
+    public void sendConfirmedOrderEmail(String username, String productName,String to, String status) {
+        try {
+            Context context = new Context();
+            context.setVariables(Map.of("userName", username,"productName", productName, "status" ,status));
+            createHtmlEmail(to, context, ORDER_TEMPLATE, ORDER_CONFIRMED);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    private void createHtmlEmail(String to, Context context, String orderTemplate, String orderConfirmed) throws MessagingException {
+        String text = templateEngine.process(orderTemplate, context);
+        MimeMessage message = getMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF_8_ENCODING);
+        helper.setPriority(1);
+        helper.setSubject(orderConfirmed);
+        helper.setFrom(fromEmail);
+        helper.setTo(to);
+        helper.setText(text, true);
+
+        emailSender.send(message);
     }
 
     private MimeMessage getMimeMessage() {

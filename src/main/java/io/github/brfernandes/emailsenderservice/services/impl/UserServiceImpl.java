@@ -1,7 +1,8 @@
 package io.github.brfernandes.emailsenderservice.services.impl;
 
-import io.github.brfernandes.emailsenderservice.domains.Confirmation;
-import io.github.brfernandes.emailsenderservice.domains.User;
+import io.github.brfernandes.emailsenderservice.models.Confirmation;
+import io.github.brfernandes.emailsenderservice.models.Order;
+import io.github.brfernandes.emailsenderservice.models.User;
 import io.github.brfernandes.emailsenderservice.repositories.ConfirmationRepository;
 import io.github.brfernandes.emailsenderservice.repositories.UserRepository;
 import io.github.brfernandes.emailsenderservice.services.EmailSenderService;
@@ -28,27 +29,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(User user) {
-        if (userRepository.existsByEmail(user.getEmail())) {throw new RuntimeException("Email already exists!");}
-
-        user.setEnabled(false);
-        userRepository.save(user);
-
-        Confirmation confirmation = new Confirmation(user);
-        confirmationRepository.save(confirmation);
-
-        //emailService.sendSimpleEmailMessage(user.getName(), user.getEmail(), confirmation.getToken());
-        //emailService.sendMineMessageWithAttachment(user.getName(), user.getEmail(), confirmation.getToken());
-        //emailService.sendHtmlEmailWithEmbeddedFiles(user.getName(), user.getEmail(), confirmation.getToken());
-        emailService.sendHtmlEmail(user.getName(), user.getEmail(), confirmation.getToken());
-        return user;
+    public void sendConfirmedOrder(Order order) {
+        emailSenderService.sendConfirmedOrderEmail(
+                order.getUser().getName(),
+                order.getName(),
+                order.getUser().getEmail(),
+                order.getStatus()
+        );
     }
 
     @Override
     public Boolean verifyToken(String token) {
         Confirmation confirmation = confirmationRepository.findByToken(token);
         User user = userRepository.findByEmailIgnoreCase(confirmation.getUser().getEmail());
-        user.setEnabled(true);
         userRepository.save(user);
         //confirmationRepository.delete(confirmation);
         return true;
