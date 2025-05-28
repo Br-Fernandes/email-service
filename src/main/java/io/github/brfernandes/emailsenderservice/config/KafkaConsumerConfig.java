@@ -27,10 +27,9 @@ public class KafkaConsumerConfig {
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
 
-        // Configuração do JsonDeserializer
         JsonDeserializer<User> jsonDeserializer = new JsonDeserializer<>(User.class);
-        jsonDeserializer.addTrustedPackages("*"); // Permitir pacotes confiáveis
-        jsonDeserializer.setRemoveTypeHeaders(false); // Manter os cabeçalhos de tipo, se necessário
+        jsonDeserializer.addTrustedPackages("*");
+        jsonDeserializer.setRemoveTypeHeaders(false);
 
         return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(), jsonDeserializer);
     }
