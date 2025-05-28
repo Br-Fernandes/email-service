@@ -4,6 +4,7 @@ spring:
 
   data:
     mongodb:
+      uri: mongodb://brfernandes:senha123@localhost:27017/
       host: localhost
       port: 27017
       database: click&send
@@ -36,7 +37,7 @@ spring:
     bootstrap-servers: localhost:9092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
 
 server:
   port: 8081
