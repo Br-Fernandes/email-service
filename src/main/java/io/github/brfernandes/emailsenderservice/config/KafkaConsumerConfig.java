@@ -25,11 +25,11 @@ public class KafkaConsumerConfig {
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         config.put(ConsumerConfig.GROUP_ID_CONFIG, "email-consumer");
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
 
         JsonDeserializer<User> jsonDeserializer = new JsonDeserializer<>(User.class);
         jsonDeserializer.addTrustedPackages("*");
-        jsonDeserializer.setRemoveTypeHeaders(false);
 
         return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(), jsonDeserializer);
     }
