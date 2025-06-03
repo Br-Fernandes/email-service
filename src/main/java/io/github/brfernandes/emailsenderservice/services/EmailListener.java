@@ -1,6 +1,7 @@
 
 package io.github.brfernandes.emailsenderservice.services;
 
+import io.github.brfernandes.emailsenderservice.models.Order;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -20,5 +21,10 @@ public class EmailListener {
     public void sendWelcomerEmail(User user){
         Confirmation confirmation = new Confirmation();
         emailService.sendWelcomeEmail(user.getName(), user.getEmail(), confirmation.getToken());
+    }
+
+    @KafkaListener(topics = "new-order-topic", groupId = "email-consumer")
+    public void send(Order order) {
+        
     }
 }
