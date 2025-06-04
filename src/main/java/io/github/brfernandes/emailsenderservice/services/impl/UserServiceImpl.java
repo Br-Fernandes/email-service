@@ -1,5 +1,7 @@
 package io.github.brfernandes.emailsenderservice.services.impl;
 
+import org.springframework.stereotype.Service;
+
 import io.github.brfernandes.emailsenderservice.models.Confirmation;
 import io.github.brfernandes.emailsenderservice.models.Order;
 import io.github.brfernandes.emailsenderservice.models.User;
@@ -8,7 +10,6 @@ import io.github.brfernandes.emailsenderservice.repositories.UserRepository;
 import io.github.brfernandes.emailsenderservice.services.EmailSenderService;
 import io.github.brfernandes.emailsenderservice.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -30,12 +31,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void sendConfirmedOrder(Order order) {
-        emailSenderService.sendConfirmedOrderEmail(
-                order.getUser().getName(),
-                order.getName(),
-                order.getUser().getEmail(),
-                order.getStatus()
-        );
+        // emailSenderService.sendConfirmedOrderEmail(
+        //         // order.getUser().getName(),
+        //         // order.getName(),
+        //         // order.getUser().getEmail(),
+        //         // order.getStatus()
+        // );
     }
 
     @Override

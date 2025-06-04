@@ -7,7 +7,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class Order {
 
-    private String name;
+    private String username;
+    private String productName;
+    private String to;
     private String status;
-    private User user;
 }

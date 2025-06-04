@@ -1,13 +1,13 @@
 
 package io.github.brfernandes.emailsenderservice.services;
 
-import io.github.brfernandes.emailsenderservice.models.Order;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.brfernandes.emailsenderservice.models.Confirmation;
+import io.github.brfernandes.emailsenderservice.models.Order;
 import io.github.brfernandes.emailsenderservice.models.User;
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +25,6 @@ public class EmailListener {
 
     @KafkaListener(topics = "new-order-topic", groupId = "email-consumer")
     public void send(Order order) {
-        
+        emailService.sendConfirmedOrderEmail(order.getUsername(), order.getProductName(), order.getTo(), order.getStatus());
     }
 }
