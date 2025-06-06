@@ -14,6 +14,7 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 
 import io.github.brfernandes.emailsenderservice.models.Order;
 import io.github.brfernandes.emailsenderservice.models.User;
+import io.github.brfernandes.emailsenderservice.utils.serializers.OrderDeserializer;
 import io.github.brfernandes.emailsenderservice.utils.serializers.UserDeserializer;
 
 @Configuration
@@ -28,7 +29,7 @@ public class KafkaConsumerConfig {
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         config.put(ConsumerConfig.GROUP_ID_CONFIG, "email-user-consumer");
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, UserDeserializer.class); // Alterado para StringDeserializer
+        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, UserDeserializer.class); 
 
         return new DefaultKafkaConsumerFactory<>(config);
     }
@@ -48,7 +49,7 @@ public class KafkaConsumerConfig {
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         config.put(ConsumerConfig.GROUP_ID_CONFIG, "email-order-consumer");
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, UserDeserializer.class); // Alterado para StringDeserializer
+        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, OrderDeserializer.class); 
 
         return new DefaultKafkaConsumerFactory<>(config);
     }
