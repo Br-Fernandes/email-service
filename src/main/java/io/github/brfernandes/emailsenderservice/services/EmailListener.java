@@ -17,30 +17,35 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EmailListener {
     private final EmailSenderService emailService;
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper mapper;
     
     @KafkaListener(topics = "new-user-topic", groupId="email-user-consumer")
-    public void sendWelcomerEmail(User user){
+    public void sendWelcomerEmail(String message){
         Confirmation confirmation = new Confirmation();
-        emailService.sendWelcomeEmail(user.getName(), user.getEmail(), confirmation.getToken());
+
+        try {
+            User user = mapper.readValue(message, User.class);
+
+            emailService.sendWelcomeEmail(user.getName(), user.getEmail(), confirmation.getToken());
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
     @KafkaListener(topics = "new-order-topic", groupId = "email-order-consumer")
     public void send(String message) {
-        ObjectMapper mapper = new ObjectMapper();
         Order order;
         try {
             order = mapper.readValue(message, Order.class);
             emailService.sendConfirmedOrderEmail(order.getUsername(), order.getProductName(), order.getTo(), order.getStatus());
 
         } catch (JsonMappingException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (JsonProcessingException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
     }
 
     // @KafkaListener(topics = "new-order-topic", groupId = "email-order-consumer")
