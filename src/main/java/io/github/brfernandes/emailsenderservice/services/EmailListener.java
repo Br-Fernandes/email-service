@@ -21,10 +21,9 @@ public class EmailListener {
     
     @KafkaListener(topics = "new-user-topic", groupId="email-user-consumer")
     public void sendWelcomerEmail(String message){
-        Confirmation confirmation = new Confirmation();
-
         try {
             User user = mapper.readValue(message, User.class);
+            Confirmation confirmation = new Confirmation(user);
 
             emailService.sendWelcomeEmail(user.getName(), user.getEmail(), confirmation.getToken());
         } catch (JsonMappingException e) {

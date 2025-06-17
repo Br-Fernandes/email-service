@@ -1,9 +1,7 @@
 package io.github.brfernandes.emailsenderservice.services.impl;
 
-import io.github.brfernandes.emailsenderservice.services.EmailSenderService;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
-import lombok.RequiredArgsConstructor;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -11,9 +9,11 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import java.util.Map;
-
+import io.github.brfernandes.emailsenderservice.services.EmailSenderService;
 import static io.github.brfernandes.emailsenderservice.utils.EmailUtils.getVerificationUrl;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +42,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 
     @Override
     public void sendWelcomeEmail(String name, String to,  String token) {
+        System.out.println(getVerificationUrl(host, token));
         try {
             Context context = new Context();
             context.setVariables(Map.of("name", name, "url", getVerificationUrl(host ,token)));
