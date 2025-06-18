@@ -11,19 +11,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.brfernandes.emailsenderservice.models.Confirmation;
 import io.github.brfernandes.emailsenderservice.models.Order;
 import io.github.brfernandes.emailsenderservice.models.User;
+import io.github.brfernandes.emailsenderservice.repositories.ConfirmationRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class EmailListener {
     private final EmailSenderService emailService;
+    private final ConfirmationRepository confirmationRepository;
     private final ObjectMapper mapper;
     
     @KafkaListener(topics = "new-user-topic", groupId="email-user-consumer")
     public void sendWelcomerEmail(String message){
         try {
             User user = mapper.readValue(message, User.class);
-            Confirmation confirmation = new Confirmation(user);
+            Confirmation confirmation = confirmationRepository.findByUserEmail(user.getEmail());
 
             emailService.sendWelcomeEmail(user.getName(), user.getEmail(), confirmation.getToken());
         } catch (JsonMappingException e) {
