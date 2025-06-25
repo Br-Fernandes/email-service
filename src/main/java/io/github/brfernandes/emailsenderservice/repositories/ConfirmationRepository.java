@@ -9,6 +9,4 @@ import io.github.brfernandes.emailsenderservice.models.Confirmation;
 public interface ConfirmationRepository extends MongoRepository<Confirmation, String> {
 
     Confirmation findByToken(String token);
-
-    Confirmation findByUserEmail(String email);
 }

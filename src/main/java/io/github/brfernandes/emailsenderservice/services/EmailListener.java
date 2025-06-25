@@ -8,7 +8,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.github.brfernandes.emailsenderservice.models.Confirmation;
 import io.github.brfernandes.emailsenderservice.models.Order;
 import io.github.brfernandes.emailsenderservice.models.User;
 import io.github.brfernandes.emailsenderservice.repositories.ConfirmationRepository;
@@ -25,9 +24,8 @@ public class EmailListener {
     public void sendWelcomerEmail(String message){
         try {
             User user = mapper.readValue(message, User.class);
-            Confirmation confirmation = confirmationRepository.findByUserEmail(user.getEmail());
 
-            emailService.sendWelcomeEmail(user.getName(), user.getEmail(), confirmation.getToken());
+            emailService.sendWelcomeEmail(user.getName(), user.getEmail(), user.getToken());
         } catch (JsonMappingException e) {
             e.printStackTrace();
         } catch (JsonProcessingException e) {
